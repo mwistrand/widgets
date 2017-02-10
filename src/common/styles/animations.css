@@ -30,7 +30,7 @@
 	animation-name: fadeOut;
 }
 
-@keyframes slideInDown {
+@keyframes expandDown {
 	from {
 		max-height: 0;
 	}
@@ -39,13 +39,13 @@
 	}
 }
 
-.slideInDown {
+.expandDown {
 	animation-duration: var(--short-animation-duration);
 	animation-fill-mode: both;
-	animation-name: slideInDown;
+	animation-name: expandDown;
 }
 
-@keyframes slideOutUp {
+@keyframes collapseUp {
 	from {
 		max-height: 300px;
 	}
@@ -54,8 +54,8 @@
 	}
 }
 
-.slideOutUp {
+.collapseUp {
 	animation-duration: var(--short-animation-duration);
 	animation-fill-mode: both;
-	animation-name: slideOutUp;
+	animation-name: collapseUp;
 }
