@@ -1,25 +1,25 @@
-import createTitlePanel from './components/titlePanel/createTitlePanel';
-import Dialog from './dialog/Dialog';
-import SlidePane from './slidepane/SlidePane';
-import Label from './label/Label';
 import Button from './button/Button';
-import TextInput from './textinput/TextInput';
-import Textarea from './textarea/Textarea';
 import Checkbox from './checkbox/Checkbox';
-import Radio from './radio/Radio';
-import Slider from './slider/Slider';
 import ComboBox from './combobox/ComboBox';
+import Dialog from './dialog/Dialog';
+import Label from './label/Label';
+import Radio from './radio/Radio';
+import SlidePane from './slidepane/SlidePane';
+import Slider from './slider/Slider';
+import Textarea from './textarea/Textarea';
+import TextInput from './textinput/TextInput';
+import TitlePane from './components/titlepane/TitlePane';
 
 export {
-	createTitlePanel,
-	Dialog,
-	SlidePane,
-	Label,
 	Button,
-	TextInput,
-	Textarea,
 	Checkbox,
+	ComboBox,
+	Dialog,
+	Label,
 	Radio,
+	SlidePane,
 	Slider,
-	ComboBox
+	Textarea,
+	TextInput,
+	TitlePane
 };
