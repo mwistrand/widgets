@@ -8,7 +8,7 @@ import SlidePane from './slidepane/SlidePane';
 import Slider from './slider/Slider';
 import Textarea from './textarea/Textarea';
 import TextInput from './textinput/TextInput';
-import TitlePane from './components/titlepane/TitlePane';
+import TitlePane from './titlepane/TitlePane';
 
 export {
 	Button,
