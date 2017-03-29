@@ -19,6 +19,44 @@ registerSuite({
 		assert.isFalse(item.properties.selected);
 	},
 
+	properties: {
+		'applies properties to the vnode'() {
+			const item = new MenuItem();
+			item.setProperties({
+				properties: {
+					'data-custom': '12345'
+				}
+			});
+
+			const vnode: any = item.__render__();
+			assert.strictEqual(vnode.properties['data-custom'], '12345');
+		},
+
+		'does not override static properties'() {
+			const item = new MenuItem();
+			item.setProperties({
+				controls: 'controls-base',
+				expanded: false,
+				hasPopup: false,
+				disabled: false,
+				properties: {
+					'aria-controls': 'controls-custom',
+					'aria-expanded': 'true',
+					'aria-haspopup': 'true',
+					'aria-disabled': 'true'
+				}
+			});
+
+			const vnode: any = item.__render__();
+			const properties = vnode.properties;
+
+			assert.strictEqual(properties['aria-controls'], 'controls-base');
+			assert.strictEqual(properties['aria-expanded'], 'false');
+			assert.isUndefined(properties['aria-haspopup']);
+			assert.strictEqual(properties['aria-disabled'], 'false');
+		}
+	},
+
 	onClick: {
 		'when disabled'() {
 			const item = new MenuItem();
@@ -104,18 +142,8 @@ registerSuite({
 			expanded: true
 		});
 		const vnode: any = item.__render__();
-		assert.strictEqual(vnode.properties['aria-expanded'], true,
+		assert.strictEqual(vnode.properties['aria-expanded'], 'true',
 			'`expanded` should be assigned to the `aria-expanded` attribute');
-	},
-
-	hasDropDown() {
-		const item = new MenuItem();
-		item.setProperties({
-			hasDropDown: true
-		});
-		const vnode: any = item.__render__();
-		assert.strictEqual(vnode.properties['aria-hasdropdown'], true,
-			'`hasDropDown` should be assigned to the `aria-hasdropdown` attribute');
 	},
 
 	hasMenu: {
@@ -138,6 +166,25 @@ registerSuite({
 				assert.isTrue(vnode.properties.classes[className]);
 			});
 		}
+	},
+
+	hasPopup() {
+		const item = new MenuItem();
+		item.setProperties({
+			hasPopup: true
+		});
+		let vnode: any = item.__render__();
+
+		assert.strictEqual(vnode.properties['aria-haspopup'], 'true',
+			'`hasPopup` should be assigned to the `aria-haspopup` attribute');
+
+		item.setProperties({
+			hasPopup: false
+		});
+		vnode = item.__render__();
+
+		assert.isUndefined(vnode.properties['aria-haspopup'],
+			'the `aria-haspopup` attribute should be undefined');
 	},
 
 	selected() {
@@ -174,5 +221,18 @@ registerSuite({
 
 			assert.strictEqual(vnode.properties.tabIndex, 0);
 		}
+	},
+
+	tag() {
+		const item = new MenuItem();
+		let vnode: any = item.__render__();
+
+		assert.strictEqual(vnode.vnodeSelector, 'span', 'defaults to span');
+
+		item.setProperties({
+			tag: 'a'
+		});
+		vnode = item.__render__();
+		assert.strictEqual(vnode.vnodeSelector, 'a');
 	}
 });

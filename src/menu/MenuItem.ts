@@ -1,4 +1,6 @@
+import { assign } from '@dojo/core/lang';
 import { v } from '@dojo/widget-core/d';
+import { VirtualDomProperties } from '@dojo/widget-core/interfaces';
 import ThemeableMixin, { theme, ThemeableProperties } from '@dojo/widget-core/mixins/Themeable';
 import WidgetBase from '@dojo/widget-core/WidgetBase';
 import * as css from './styles/menu.m.css';
@@ -17,12 +19,12 @@ import * as css from './styles/menu.m.css';
  * @property expanded
  * A flag indicating whether a widget controlled by `this` is expanded.
  *
- * @property hasDropDown
- * A flag indicating whether the widget has a drop down child.
- *
  * @property hasMenu
  * A flag indicating whether the widget is used as the label for a menu widget. If `true`,
  * then the `menuLabel` CSS class is applied instead of the `menuItem` class.
+ *
+ * @property hasPopup
+ * A flag indicating whether the widget has a drop down child.
  *
  * @property onClick
  * An event handler for click events.
@@ -40,12 +42,14 @@ export interface MenuItemProperties extends ThemeableProperties {
 	controls?: string;
 	disabled?: boolean;
 	expanded?: boolean;
-	hasDropDown?: boolean;
 	hasMenu?: boolean;
+	hasPopup?: boolean;
 	onClick?: (event: MouseEvent) => void;
 	onKeypress?: (event: KeyboardEvent) => void;
+	properties?: VirtualDomProperties;
 	selected?: boolean;
 	tabIndex?: number;
+	tag?: string;
 }
 
 export const MenuItemBase = ThemeableMixin(WidgetBase);
@@ -57,10 +61,12 @@ export class MenuItem extends MenuItemBase<MenuItemProperties> {
 			controls,
 			disabled,
 			expanded,
-			hasDropDown = false,
+			hasPopup = false,
 			hasMenu = false,
+			properties,
 			selected,
-			tabIndex = 0
+			tabIndex = 0,
+			tag = 'span'
 		} = this.properties;
 
 		const classes = this.classes(
@@ -69,17 +75,17 @@ export class MenuItem extends MenuItemBase<MenuItemProperties> {
 			selected ? css.selected : null
 		);
 
-		return v('span', {
+		return v(tag, assign(Object.create(null), properties, {
 			'aria-controls': controls,
-			'aria-expanded': expanded,
-			'aria-hasdropdown': hasDropDown,
-			'aria-disabled': disabled,
+			'aria-expanded': String(expanded),
+			'aria-haspopup': hasPopup ? 'true' : undefined,
+			'aria-disabled': String(disabled),
 			classes,
 			onclick: this.onClick,
 			onkeypress: this.onKeypress,
 			role: 'menuitem',
 			tabIndex : disabled ? -1 : tabIndex
-		}, this.children);
+		}), this.children);
 	}
 
 	protected onClick(event: MouseEvent) {

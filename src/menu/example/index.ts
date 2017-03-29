@@ -106,13 +106,12 @@ export class App extends AppBase<WidgetProperties> {
 			}, [
 				w(MenuItem, {
 					key: 'DojoMenuLabel',
-					tabIndex: -1
-				}, [
-					v('a', {
+					tag: 'a',
+					properties: {
 						href: 'http://dojo.io',
 						target: '_blank'
-					}, [ 'Dojo 2' ])
-				]),
+					}
+				}, [ 'Dojo 2' ]),
 
 				w(Menu, {
 					animate: <boolean> animate,
@@ -131,13 +130,12 @@ export class App extends AppBase<WidgetProperties> {
 				}, packages.map((label, i) => {
 					return w(MenuItem, {
 						key: `menu1-sub1-item${i}`,
-						tabIndex: -1
-					}, [
-						v('a', {
+						tag: 'a',
+						properties: {
 							href: `https://github.com/dojo/${label}`,
 							target: '_blank'
-						}, [ label ])
-					]);
+						}
+					}, [ label ]);
 				}))
 			])
 		]);
