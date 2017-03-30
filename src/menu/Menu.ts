@@ -65,6 +65,7 @@ export interface MenuProperties extends ThemeableProperties {
 	id?: string;
 	label?: DNode;
 	nested?: boolean;
+	onRequestActiveUpdate?: (index: number) => void;
 	onRequestHide?: () => void;
 	onRequestShow?: () => void;
 	role?: Role;
@@ -80,6 +81,7 @@ export const MenuBase = ThemeableMixin(WidgetBase);
 @theme(css)
 export class Menu extends MenuBase<MenuProperties> {
 	protected wasOpen = false;
+	private _activeIndex: number | undefined;
 	private _hideTimer: Handle;
 	private _initialRender = true;
 
@@ -121,7 +123,7 @@ export class Menu extends MenuBase<MenuProperties> {
 				hasMenu: true,
 				overrideClasses: overrideClasses || css,
 				onClick: this.onLabelClick,
-				onKeypress: this.onLabelKeypress
+				onKeydown: this.onLabelKeydown
 			}, [ label ]);
 		}
 	}
@@ -227,17 +229,36 @@ export class Menu extends MenuBase<MenuProperties> {
 		}
 	}
 
-	protected onLabelKeypress(event: KeyboardEvent) {
-		const { disabled } = this.properties;
-		const key: string | number = 'key' in event ? event.key : event.keyCode;
+	protected onLabelKeydown(event: KeyboardEvent) {
+		const max = this.children.length - 1;
+		const { _activeIndex = -1 } = this;
+		const { onRequestActiveUpdate } = this.properties;
 
-		if (!disabled && (key === 'Enter' || key === 13)) {
-			this.toggleDisplay();
+		switch (event.keyCode) {
+			case 38: // up
+				// TODO: only when index > 0
+				event.stopPropagation();
+				this._activeIndex = Math.max(_activeIndex - 1, 0);
+				onRequestActiveUpdate && onRequestActiveUpdate(this._activeIndex);
+				break;
+			case 40: // down
+				event.stopPropagation();
+				this._activeIndex = Math.min(_activeIndex + 1, max);
+				this.toggleDisplay(true);
+				onRequestActiveUpdate && onRequestActiveUpdate(this._activeIndex);
+				break;
+			case 27: // escape
+				this.toggleDisplay(false);
+				break;
+			case 13: // enter
+				this.toggleDisplay();
+				break;
 		}
 	}
 
 	protected onMenuFocus() {
 		const { disabled, hidden = this.getDefaultHidden() } = this.properties;
+
 		if (!disabled && hidden) {
 			this.toggleDisplay(true);
 		}
@@ -291,6 +312,7 @@ export class Menu extends MenuBase<MenuProperties> {
 			typeof onRequestShow === 'function' && onRequestShow();
 		}
 		else {
+			this._activeIndex = undefined;
 			typeof onRequestHide === 'function' && onRequestHide();
 		}
 	}

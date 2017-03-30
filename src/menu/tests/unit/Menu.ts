@@ -397,46 +397,17 @@ registerSuite({
 		assert.isTrue(menu.properties.hidden, 'menu should not be shown on click when `expandOnClick` is false');
 	},
 
-	onLabelKeypress: {
-		'when disabled'() {
-			const menu = new Menu();
-			menu.setProperties({
-				disabled: true,
-				hidden: true,
-				onRequestShow() {
-					menu.setProperties({ hidden: false });
-				}
-			});
+	onLabelKeydown() {
+		const menu = new Menu();
+		menu.setProperties({
+			hidden: true,
+			onRequestShow() {
+				menu.setProperties({ hidden: false });
+			}
+		});
 
-			(<any> menu).onLabelKeypress(<any> { key: 'Enter' });
-			assert.isTrue(menu.properties.hidden, 'menu should remain hidden when disabled');
-		},
-
-		'when enabled'() {
-			const menu = new Menu();
-			menu.setProperties({
-				hidden: true,
-				onRequestShow() {
-					menu.setProperties({ hidden: false });
-				}
-			});
-
-			(<any> menu).onLabelKeypress(<any> { key: 'Enter' });
-			assert.isFalse(menu.properties.hidden);
-		},
-
-		'when `key` is not supported'() {
-			const menu = new Menu();
-			menu.setProperties({
-				hidden: true,
-				onRequestShow() {
-					menu.setProperties({ hidden: false });
-				}
-			});
-
-			(<any> menu).onLabelKeypress(<any> { keyCode: 13 });
-			assert.isFalse(menu.properties.hidden);
-		}
+		(<any> menu).onLabelKeydown(<any> { keyCode: 13 });
+		assert.isFalse(menu.properties.hidden);
 	},
 
 	onMenuFocus: {

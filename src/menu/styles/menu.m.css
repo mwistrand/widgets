@@ -24,6 +24,7 @@
 	composes: menuItem;
 }
 
+.active,
 .menuItem:focus,
 .menuLabel:focus {
 	box-shadow: inset var(--input-focus-shadow);

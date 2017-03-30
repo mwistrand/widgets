@@ -86,33 +86,17 @@ registerSuite({
 		}
 	},
 
-	onKeypress: {
-		'when disabled'() {
-			const item = new MenuItem();
-			let event: any;
-			item.setProperties({
-				disabled: true,
-				onKeypress(_event: any) {
-					event = _event;
-				}
-			});
+	onKeydown() {
+		const item = new MenuItem();
+		let event: any;
+		item.setProperties({
+			onKeydown(_event: any) {
+				event = _event;
+			}
+		});
 
-			(<any> item).onKeypress(<any> { type: 'keypress' });
-			assert.isUndefined(event, '`onKeypress` should not be called when the menu item is disabled.');
-		},
-
-		'when enabled'() {
-			const item = new MenuItem();
-			let event: any;
-			item.setProperties({
-				onKeypress(_event: any) {
-					event = _event;
-				}
-			});
-
-			(<any> item).onKeypress(<any> { type: 'keypress' });
-			assert.strictEqual(event!.type, 'keypress', '`onKeypress` should be called when the menu item is enabled.');
-		}
+		(<any> item).onKeydown(<any> { type: 'keydown' });
+		assert.strictEqual(event!.type, 'keydown', '`onKeydown` should be called when the menu item is enabled.');
 	},
 
 	controls() {

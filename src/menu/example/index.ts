@@ -121,6 +121,9 @@ export class App extends AppBase<WidgetProperties> {
 					key: 'menu1-sub1',
 					label: 'Dojo 2 Packages',
 					nested: true,
+					onRequestActiveUpdate: (activeIndex: number) => {
+						this.setState({ activeIndex });
+					},
 					onRequestHide: () => {
 						this.setState({ packageMenuHidden: true });
 					},
@@ -129,6 +132,7 @@ export class App extends AppBase<WidgetProperties> {
 					}
 				}, packages.map((label, i) => {
 					return w(MenuItem, {
+						active: this.state['activeIndex'] === i,
 						key: `menu1-sub1-item${i}`,
 						tag: 'a',
 						properties: {
@@ -172,9 +176,9 @@ export class App extends AppBase<WidgetProperties> {
 					return w(MenuItem, {
 						key,
 						disabled: name === 'Open Location...',
-						onKeypress: (event: KeyboardEvent) => {
-							const pressed = 'key' in event ? event.key : event.keyCode;
-							if (pressed === 'Enter') {
+						onKeydown: (event: KeyboardEvent) => {
+							const isEnter = event.keyCode === 13;
+							if (isEnter) {
 								toggleSelected();
 							}
 						},

@@ -29,8 +29,8 @@ import * as css from './styles/menu.m.css';
  * @property onClick
  * An event handler for click events.
  *
- * @property onKeypress
- * An event handler for keypress events.
+ * @property onKeydown
+ * An event handler for keydown events.
  *
  * @property selected
  * Indicates whether the widget is selected.
@@ -39,13 +39,14 @@ import * as css from './styles/menu.m.css';
  * The tab index. Defaults to 0, and is forced to -1 if the widget is disabled.
  */
 export interface MenuItemProperties extends ThemeableProperties {
+	active?: boolean;
 	controls?: string;
 	disabled?: boolean;
 	expanded?: boolean;
 	hasMenu?: boolean;
 	hasPopup?: boolean;
 	onClick?: (event: MouseEvent) => void;
-	onKeypress?: (event: KeyboardEvent) => void;
+	onKeydown?: (event: KeyboardEvent) => void;
 	properties?: VirtualDomProperties;
 	selected?: boolean;
 	tabIndex?: number;
@@ -58,6 +59,7 @@ export const MenuItemBase = ThemeableMixin(WidgetBase);
 export class MenuItem extends MenuItemBase<MenuItemProperties> {
 	render() {
 		const {
+			active = false,
 			controls,
 			disabled,
 			expanded,
@@ -72,7 +74,8 @@ export class MenuItem extends MenuItemBase<MenuItemProperties> {
 		const classes = this.classes(
 			hasMenu ? css.menuLabel : css.menuItem,
 			disabled ? css.disabled : null,
-			selected ? css.selected : null
+			selected ? css.selected : null,
+			active ? css.active : null
 		);
 
 		return v(tag, assign(Object.create(null), properties, {
@@ -82,7 +85,7 @@ export class MenuItem extends MenuItemBase<MenuItemProperties> {
 			'aria-disabled': String(disabled),
 			classes,
 			onclick: this.onClick,
-			onkeypress: this.onKeypress,
+			onkeydown: this.onKeydown,
 			role: 'menuitem',
 			tabIndex : disabled ? -1 : tabIndex
 		}), this.children);
@@ -95,10 +98,10 @@ export class MenuItem extends MenuItemBase<MenuItemProperties> {
 		}
 	}
 
-	protected onKeypress(event: KeyboardEvent) {
-		const { disabled, onKeypress } = this.properties;
-		if (!disabled && typeof onKeypress === 'function') {
-			onKeypress(event);
+	protected onKeydown(event: KeyboardEvent) {
+		const { onKeydown } = this.properties;
+		if (typeof onKeydown === 'function') {
+			onKeydown(event);
 		}
 	}
 }
