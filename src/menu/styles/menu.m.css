@@ -1,0 +1,7 @@
+@import '../../common/styles/base.m.css';
+
+.root {}
+
+.hidden {
+	composes: hidden from '../../common/styles/base.m.css';
+}
